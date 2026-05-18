@@ -1,0 +1,57 @@
+# ==============================================================================
+# ARQUIVO DE HIPERPARÂMETROS (YOLO - Configuração AdamW)
+# ==============================================================================
+# Este arquivo fixa os parâmetros usados automaticamente no último treino.
+# Isso garante que os resultados sejam reprodutíveis e estáveis.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. OTIMIZAÇÃO E APRENDIZADO
+# ------------------------------------------------------------------------------
+
+optimizer: AdamW  # Otimizador escolhido (estável para transformers e redes profundas)
+lr0: 0.001667     # Taxa de aprendizado inicial (Valor exato do seu log anterior)
+lrf: 0.01         # Taxa de aprendizado final (lr0 * lrf)
+momentum: 0.9     # Momentum do AdamW (Ajuda a sair de mínimos locais)
+weight_decay: 0.0005  # Decaimento de peso (Evita que o modelo decore os dados/overfitting)
+
+# --- Aquecimento (Warmup) ---
+# O modelo começa aprendendo devagar nas primeiras épocas para estabilizar.
+warmup_epochs: 3.0    # Número de épocas de aquecimento
+warmup_momentum: 0.8  # Momentum inicial durante o aquecimento
+warmup_bias_lr: 0.1   # Taxa de aprendizado dos viéses no início
+
+# ------------------------------------------------------------------------------
+# 2. PESOS DA FUNÇÃO DE PERDA (LOSS GAINS)
+# ------------------------------------------------------------------------------
+# Define o que é mais importante para o modelo aprender.
+
+box: 7.5      # Peso da Caixa (Bounding Box). Alto = Prioridade é acertar o retângulo perfeito.
+cls: 0.5      # Peso da Classe. Baixo = Fácil distinguir abelha de fundo.
+dfl: 1.5      # Distribution Focal Loss. Ajuste fino das bordas da caixa.
+
+# ------------------------------------------------------------------------------
+# 3. AUMENTO DE DADOS (AUGMENTATION) - ON-THE-FLY
+# ------------------------------------------------------------------------------
+# Estas transformações são aplicadas na memória RAM a cada época durante o treino.
+# Elas somam-se às transformações que já foram feitas no Roboflow.
+
+# --- Cor e Luz (Crítico para o problema Dia/Noite) ---
+hsv_h: 0.015  # Matiz (Hue). Variação pequena da cor (abelha não muda de cor drasticamente).
+hsv_s: 0.7    # Saturação. Variação média (abelhas pálidas vs vivas).
+hsv_v: 0.4    # Valor (Brilho). Variação média. Ajuda na robustez de iluminação.
+
+# --- Geometria e Posição ---
+degrees: 0.0      # Rotação. 0.0 pois suas abelhas geralmente estão alinhadas ou diagonais, não invertidas.
+translate: 0.1    # Translação. Move a imagem +/- 10% para os lados. Ajuda a não viciar no centro.
+scale: 0.5        # Escala (Zoom). O modelo vê abelhas 50% menores ou 50% maiores.
+shear: 0.0        # Cisalhamento (Distorção). Desativado.
+perspective: 0.0  # Perspectiva. Desativado.
+flipud: 0.0       # Flip Vertical (De ponta cabeça). Desativado para abelhas em colmeias padrão.
+fliplr: 0.5       # Flip Horizontal. 50% de chance. CRUCIAL para balancear esquerda/direita.
+
+# --- Técnicas Avançadas ---
+mosaic: 1.0       # Mosaico. (Sempre ativo). Junta 4 imagens em 1. Ótimo para objetos pequenos.
+mixup: 0.0        # Mixup. (Desativado). Mistura duas imagens transparentes.
+copy_paste: 0.0   # Copy-Paste. (Desativado). Segmentação necessária.
+erasing: 0.4      # Random Erasing. Apaga pequenos quadrados da imagem. Simula oclusão (abelha atrás de folha).
