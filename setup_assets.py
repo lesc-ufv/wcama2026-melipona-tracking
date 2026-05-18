@@ -4,8 +4,6 @@ import requests
 
 # ==========================================
 # CONFIGURAÇÃO DO ZENODO
-# Substitua pelo ID gerado após publicar seu dataset no Zenodo.
-# Exemplo: se o link for zenodo.org/records/1234567, o ID é "1234567"
 # ==========================================
 ZENODO_RECORD_ID = "20276311"
 
@@ -20,7 +18,7 @@ def criar_diretorios():
     for pasta in pastas:
         if not os.path.exists(pasta):
             os.makedirs(pasta)
-            print(f"📁 Diretório raiz '{pasta}/' criado.")
+            print(f"Diretório raiz '{pasta}/' criado.")
 
 def baixar_do_zenodo(url, destino):
     """Faz o download do arquivo via stream para não sobrecarregar a RAM."""
@@ -31,10 +29,10 @@ def baixar_do_zenodo(url, destino):
             with open(destino, 'wb') as f:
                 for chunk in r.iter_content(chunk_size=8192):
                     f.write(chunk)
-        print(f"✅ Download de {os.path.basename(destino)} concluído.")
+        print(f"Download de {os.path.basename(destino)} concluído.")
         return True
     except Exception as e:
-        print(f"❌ Erro ao baixar {os.path.basename(destino)}. Detalhes: {e}")
+        print(f"Erro ao baixar {os.path.basename(destino)}. Detalhes: {e}")
         return False
 
 def extrair_zip(caminho_zip, pasta_destino):
@@ -50,14 +48,14 @@ def extrair_zip(caminho_zip, pasta_destino):
             print(f"❌ Erro: Arquivo {caminho_zip} parece estar corrompido.")
             return False
     else:
-        print(f"⚠️ Arquivo {caminho_zip} não encontrado para extração.")
+        print(f"Arquivo {caminho_zip} não encontrado para extração.")
         return False
 
 if __name__ == "__main__":
-    print("🚀 Iniciando configuração do ambiente de testes via Zenodo...")
+    print("Iniciando configuração do ambiente de testes via Zenodo...")
     
     if ZENODO_RECORD_ID == "SEU_RECORD_ID_AQUI":
-        print("❌ ATENÇÃO: Você precisa alterar a variável 'ZENODO_RECORD_ID' no código com o ID da sua publicação no Zenodo.")
+        print("ATENÇÃO: Você precisa alterar a variável 'ZENODO_RECORD_ID' no código com o ID da sua publicação no Zenodo.")
         exit(1)
 
     criar_diretorios()
@@ -71,10 +69,10 @@ if __name__ == "__main__":
     download_modelos = baixar_do_zenodo(URLS["modelos"], caminho_modelos_zip)
     
     if not (download_dataset and download_modelos):
-        print("\n⚠️ Falha nos downloads. Verifique seu ZENODO_RECORD_ID e a conexão de rede.")
+        print("\nFalha nos downloads. Verifique seu ZENODO_RECORD_ID e a conexão de rede.")
         exit(1)
         
-    print("\n⚙️ Iniciando descompactação e estruturação de pastas...")
+    print("\nIniciando descompactação e estruturação de pastas...")
     
     # 2. Processar o Dataset
     extrair_zip(caminho_dataset_zip, "dataset/")
@@ -92,7 +90,7 @@ if __name__ == "__main__":
             "modelos/yolo_26n_exportados_rpi5.zip": "modelos/yolo26n"
         }
         
-        print("\n📂 Criando subdiretórios individuais para cada arquitetura...")
+        print("\nCriando subdiretórios individuais para cada arquitetura...")
         
         for caminho_zip_interno, pasta_destino in estruturas_arquiteturas.items():
             # Cria a subpasta específica (ex: modelos/rtdetr)
@@ -108,5 +106,5 @@ if __name__ == "__main__":
         if os.path.exists(caminho_modelos_zip):
             os.remove(caminho_modelos_zip)
             
-    print("\n🎉 Ambiente 100% configurado!")
+    print("\nAmbiente 100% configurado!")
     print("A árvore de arquivos está idêntica à especificada, pronta para o rastreamento das abelhas.")
