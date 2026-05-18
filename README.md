@@ -36,16 +36,7 @@ wxama2026-melipona-tracking/
 
 Como os modelos exportados e o conjunto de dados bruto ultrapassam os limites de armazenamento padrão do GitHub, o repositório utiliza o script `setup_assets.py` para buscar os arquivos compactados diretamente do Google Drive de forma automatizada.
 
-### 1. Pré-requisitos
-
-Certifique-se de ter a biblioteca `gdown` instalada no seu ambiente (módulo necessário para realizar downloads persistentes do Google Drive):
-
-```bash
-pip install gdown requests
-
-```
-
-### 2. Download Automatizado de Dados e Modelos
+### 1. Download Automatizado de Dados e Modelos
 
 Na raiz do projeto, execute o script de automação:
 
@@ -64,6 +55,7 @@ Este script irá criar as pastas necessárias e realizar o download/extração d
 1. **Validação Prática e MOTA:** Os dados analíticos do teste de consistência temporal e fluxo direcional (mencionados na Seção 5.2 do artigo) utilizam diretamente os arquivos contidos na pasta `/test_mot` e `/bee_dataset_mot/gt/gt.txt`.
 2. **Hiperparâmetros:** Os arquivos na pasta `/configs` detalham a taxa de aprendizado inicial ($lr0 = 0.001667$), otimizador AdamW, e os ganhos de perda e transformações geométricas na memória utilizados para mitigar o desbalanceamento de classes do cenário real.
 3. **Treinamento:** Os notebooks em `/notebooks` documentam de ponta a ponta o processo de treinamento e as curvas de convergência obtidas na GPU antes do processo de quantização INT8 para a borda.
+4. **Entrada da colmeia:** ROI = {"xmin": 415, "ymin": 415, "xmax": 540, "ymax": 580}
 
 ## ✒️ Autor
 

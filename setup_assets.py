@@ -1,79 +1,112 @@
 import os
 import zipfile
-import gdown
+import requests
 
-# Substitua pelos seus links reais de compartilhamento do Google Drive
+# ==========================================
+# CONFIGURAÇÃO DO ZENODO
+# Substitua pelo ID gerado após publicar seu dataset no Zenodo.
+# Exemplo: se o link for zenodo.org/records/1234567, o ID é "1234567"
+# ==========================================
+ZENODO_RECORD_ID = "20276311"
+
 URLS = {
-    "dataset": "https://drive.google.com/file/d/1cDSHL7_WyG11Ax0i1lExyD0Q9tDGUV1W/view?usp=drive_link",
-    "yolo11n": "https://drive.google.com/file/d/1GLv27baYNQceOUlkSpKYBI3R8Sl-zwyB/view?usp=drive_link",
-    "yolo26n": "https://drive.google.com/file/d/1M4RXSupisR9Nv9U6KkkyBLofGZPEslXl/view?usp=drive_link",
-    "rtdetr": "https://drive.google.com/file/d/16MIWvF_hpvOSbW-dssrRm33Xq6N6knf_/view?usp=drive_link"
+    "dataset": f"https://zenodo.org/records/{ZENODO_RECORD_ID}/files/dataset_abelhas_v3.zip?download=1",
+    "modelos": f"https://zenodo.org/records/{ZENODO_RECORD_ID}/files/modelos.zip?download=1"
 }
 
 def criar_diretorios():
-    """Cria a estrutura de pastas necessária se não existirem."""
+    """Cria os diretórios raiz base para o projeto."""
     pastas = ['dataset', 'modelos']
     for pasta in pastas:
         if not os.path.exists(pasta):
             os.makedirs(pasta)
-            print(f"📁 Diretório '{pasta}/' criado com sucesso.")
+            print(f"📁 Diretório raiz '{pasta}/' criado.")
 
-def baixar_arquivo_gdrive(url, destino):
-    """Realiza o download de um arquivo do Google Drive usando gdown."""
-    print(f"\n📥 Baixando {os.path.basename(destino)}...")
+def baixar_do_zenodo(url, destino):
+    """Faz o download do arquivo via stream para não sobrecarregar a RAM."""
+    print(f"\n📥 Baixando {os.path.basename(destino)} do Zenodo...")
     try:
-        # fuzzy=True permite usar o link padrão de compartilhamento do Drive
-        gdown.download(url, destino, quiet=False, fuzzy=True)
+        with requests.get(url, stream=True) as r:
+            r.raise_for_status()
+            with open(destino, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=8192):
+                    f.write(chunk)
         print(f"✅ Download de {os.path.basename(destino)} concluído.")
         return True
     except Exception as e:
-        print(f"❌ Erro ao baixar {os.path.basename(destino)}. Erro: {e}")
+        print(f"❌ Erro ao baixar {os.path.basename(destino)}. Detalhes: {e}")
         return False
 
 def extrair_zip(caminho_zip, pasta_destino):
-    """Extrai um arquivo ZIP na pasta de destino informada."""
+    """Extrai o conteúdo do ZIP para a pasta especificada."""
     if os.path.exists(caminho_zip):
-        print(f"📦 Extraindo {os.path.basename(caminho_zip)} em '{pasta_destino}'...")
+        print(f"📦 Extraindo {os.path.basename(caminho_zip)} para '{pasta_destino}'...")
         try:
             with zipfile.ZipFile(caminho_zip, 'r') as zip_ref:
                 zip_ref.extractall(pasta_destino)
-            print(f"✅ Extração de {os.path.basename(caminho_zip)} concluída!")
-            # Opcional: descomente a linha abaixo se quiser apagar o .zip após extrair para poupar espaço no RPi5
-            # os.remove(caminho_zip)
+            print(f"✅ Extração de {os.path.basename(caminho_zip)} concluída.")
+            return True
         except zipfile.BadZipFile:
-            print(f"❌ Erro: O arquivo {caminho_zip} parece estar corrompido ou não é um ZIP válido.")
+            print(f"❌ Erro: Arquivo {caminho_zip} parece estar corrompido.")
+            return False
     else:
         print(f"⚠️ Arquivo {caminho_zip} não encontrado para extração.")
+        return False
 
 if __name__ == "__main__":
-    print("🚀 Iniciando configuração do ambiente de testes para Raspberry Pi 5...")
+    print("🚀 Iniciando configuração do ambiente de testes via Zenodo...")
+    
+    if ZENODO_RECORD_ID == "SEU_RECORD_ID_AQUI":
+        print("❌ ATENÇÃO: Você precisa alterar a variável 'ZENODO_RECORD_ID' no código com o ID da sua publicação no Zenodo.")
+        exit(1)
+
     criar_diretorios()
     
-    # Definição dos caminhos locais com os novos nomes de arquivos
-    caminhos = {
-        "dataset": "dataset/dataset_abelhas_v3.zip",
-        "yolo11n": "modelos/yolo_11n_exportados_rpi5.zip",
-        "yolo26n": "modelos/yolo_26n_exportados_rpi5.zip",
-        "rtdetr": "modelos/rt_dert_exportados_rpi5.zip"
-    }
+    # Caminhos temporários para os zips principais
+    caminho_dataset_zip = "dataset/dataset_abelhas_v3.zip"
+    caminho_modelos_zip = "modelos/modelos.zip"
     
-    # Executa os downloads
-    downloads_ok = True
-    for chave, url in URLS.items():
-        if not baixar_arquivo_gdrive(url, caminhos[chave]):
-            downloads_ok = False
+    # 1. Realizar os Downloads
+    download_dataset = baixar_do_zenodo(URLS["dataset"], caminho_dataset_zip)
+    download_modelos = baixar_do_zenodo(URLS["modelos"], caminho_modelos_zip)
     
-    # Se algum download falhar, avisa o usuário antes de tentar extrair
-    if not downloads_ok:
-        print("\n⚠️ Alguns downloads falharam. Verifique os links do Google Drive e tente novamente.")
+    if not (download_dataset and download_modelos):
+        print("\n⚠️ Falha nos downloads. Verifique seu ZENODO_RECORD_ID e a conexão de rede.")
+        exit(1)
+        
+    print("\n⚙️ Iniciando descompactação e estruturação de pastas...")
     
-    print("\n📦 Iniciando a extração dos arquivos...")
-    # Extrai o dataset na pasta 'dataset/'
-    extrair_zip(caminhos["dataset"], "dataset/")
-    
-    # Extrai os modelos na pasta 'modelos/'
-    extrair_zip(caminhos["yolo11n"], "modelos/yolo11n")
-    extrair_zip(caminhos["yolo26n"], "modelos/yolo26n")
-    extrair_zip(caminhos["rtdetr"], "modelos/rtdetr")
-    
-    print("\n🎉 Ambiente configurado e pronto para os testes no Raspberry Pi 5!")
+    # 2. Processar o Dataset
+    extrair_zip(caminho_dataset_zip, "dataset/")
+    if os.path.exists(caminho_dataset_zip):
+        os.remove(caminho_dataset_zip) # Limpeza
+        
+    # 3. Processar os Modelos
+    # Primeiro, extraímos o master zip que contém os 3 zips das arquiteturas
+    if extrair_zip(caminho_modelos_zip, "modelos/"):
+        
+        # Mapeamento: "Nome do zip interno" -> "Subpasta onde ele deve ser extraído"
+        estruturas_arquiteturas = {
+            "modelos/rt_dert_exportados_rpi5.zip": "modelos/rtdetr",
+            "modelos/yolo_11n_exportados_rpi5.zip": "modelos/yolo11n",
+            "modelos/yolo_26n_exportados_rpi5.zip": "modelos/yolo26n"
+        }
+        
+        print("\n📂 Criando subdiretórios individuais para cada arquitetura...")
+        
+        for caminho_zip_interno, pasta_destino in estruturas_arquiteturas.items():
+            # Cria a subpasta específica (ex: modelos/rtdetr)
+            os.makedirs(pasta_destino, exist_ok=True)
+            
+            # Extrai o zip interno para dentro da subpasta correspondente
+            if extrair_zip(caminho_zip_interno, pasta_destino):
+                # Limpa o zip interno após extrair com sucesso
+                if os.path.exists(caminho_zip_interno):
+                    os.remove(caminho_zip_interno)
+                    
+        # Limpa o zip principal (modelos.zip)
+        if os.path.exists(caminho_modelos_zip):
+            os.remove(caminho_modelos_zip)
+            
+    print("\n🎉 Ambiente 100% configurado!")
+    print("A árvore de arquivos está idêntica à especificada, pronta para o rastreamento das abelhas.")
