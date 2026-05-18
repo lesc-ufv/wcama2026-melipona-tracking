@@ -72,8 +72,8 @@ if __name__ == "__main__":
     extrair_zip(caminhos["dataset"], "dataset/")
     
     # Extrai os modelos na pasta 'modelos/'
-    extrair_zip(caminhos["yolo11n"], "modelos/")
-    extrair_zip(caminhos["yolo26n"], "modelos/")
-    extrair_zip(caminhos["rtdetr"], "modelos/")
+    extrair_zip(caminhos["yolo11n"], "modelos/yolo11n")
+    extrair_zip(caminhos["yolo26n"], "modelos/yolo26n")
+    extrair_zip(caminhos["rtdetr"], "modelos/rtdetr")
     
     print("\n🎉 Ambiente configurado e pronto para os testes no Raspberry Pi 5!")
