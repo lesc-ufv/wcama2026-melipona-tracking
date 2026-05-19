@@ -1,3 +1,4 @@
+*Read in [English](README.md)*
 # Rastreamento de Abelhas da Espécie Melipona capixaba utilizando Visão Computacional
 
 Este repositório contém o código-fonte, as configurações, os modelos e os dados de validação utilizados no artigo **"Rastreamento de Abelhas da Espécie Melipona capixaba utilizando Visão Computacional"**, aceito no **WCAMA 2026**.

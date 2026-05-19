@@ -1,3 +1,4 @@
+*Ler em [Português](README.pt-br.md)*
 # Tracking Melipona capixaba Bees using Computer Vision
 
 This repository contains the source code, configurations, models, and validation data used in the paper **"Tracking Melipona capixaba Bees using Computer Vision"**, accepted at **WCAMA 2026**.
