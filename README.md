@@ -62,3 +62,14 @@ This script will create the necessary folders and perform the download/extractio
 ## ✒️ Author
 
 * **Marcos Veniciu de Sá Barbalho** - Researcher and Developer (Master's focusing on systems architecture and non-invasive ecological monitoring).
+
+
+## 📄 Citation
+
+If you use this dataset, models, or code in your research, please cite both the original paper and the Zenodo repository:
+
+**Original Article (WCAMA 2026):**
+> de Sá Barbalho, M. V., Matos, T. N., Gomes, I., Ferreira, R. S., Resende, H. C., & Nacif, J. A. M. (2026). Rastreamento de Abelhas da Espécie Melipona capixaba utilizando Visão Computacional. *Anais do Workshop de Computação Aplicada à Gestão do Meio Ambiente e Recursos Naturais (WCAMA)*.
+
+**Dataset & Models (Zenodo):**
+> de Sá Barbalho, M. V. et al. (2026). Dataset and Models - Tracking Melipona capixaba Bees using Computer Vision (Version 1.0.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.20276311
