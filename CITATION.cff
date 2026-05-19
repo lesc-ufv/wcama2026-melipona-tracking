@@ -1,0 +1,47 @@
+cff-version: 1.2.0
+message: "If you use this software or dataset in your research, please cite both the repository (Zenodo) and the original article (WCAMA 2026) listed below."
+title: "Dataset and Models - Tracking Melipona capixaba Bees using Computer Vision"
+version: 1.0.0
+doi: 10.5281/zenodo.20276311
+date-released: 2026-05-18
+url: "https://github.com/lesc-ufv/wcama2026-melipona-tracking"
+authors:
+  - family-names: "de Sá Barbalho"
+    given-names: "Marcos Veniciu"
+  - family-names: "Matos"
+    given-names: "Tiago Nunes"
+  - family-names: "Gomes"
+    given-names: "Ingrid"
+  - family-names: "Ferreira"
+    given-names: "Ricardo dos Santos"
+    orcid: "https://orcid.org/0000-0003-1802-7829"
+  - family-names: "Resende"
+    given-names: "Helder Canto"
+    orcid: "https://orcid.org/0000-0001-6582-1836"
+  - family-names: "Nacif"
+    given-names: "José Augusto Miranda"
+    orcid: "https://orcid.org/0000-0003-0703-5620"
+
+# Original Scientific Paper (Kept in Portuguese for accurate academic indexing)
+preferred-citation:
+  type: conference-paper
+  title: "Rastreamento de Abelhas da Espécie Melipona capixaba utilizando Visão Computacional"
+  collection-title: "Anais do Workshop de Computação Aplicada à Gestão do Meio Ambiente e Recursos Naturais (WCAMA)"
+  year: 2026
+  # doi: "10.XXXX/insert-paper-doi-here" # Remove the '#' and add the article's DOI when officially published
+  authors:
+    - family-names: "de Sá Barbalho"
+      given-names: "Marcos Veniciu"
+    - family-names: "Matos"
+      given-names: "Tiago Nunes"
+    - family-names: "Gomes"
+      given-names: "Ingrid"
+    - family-names: "Ferreira"
+      given-names: "Ricardo dos Santos"
+      orcid: "https://orcid.org/0000-0003-1802-7829"
+    - family-names: "Resende"
+      given-names: "Helder Canto"
+      orcid: "https://orcid.org/0000-0001-6582-1836"
+    - family-names: "Nacif"
+      given-names: "José Augusto Miranda"
+      orcid: "https://orcid.org/0000-0003-0703-5620"

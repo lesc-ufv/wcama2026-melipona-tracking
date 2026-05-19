@@ -1,62 +1,64 @@
-# Rastreamento de Abelhas da Espécie Melipona capixaba utilizando Visão Computacional
+# Tracking Melipona capixaba Bees using Computer Vision
 
-Este repositório contém o código-fonte, as configurações, os modelos e os dados de validação utilizados no artigo **"Rastreamento de Abelhas da Espécie Melipona capixaba utilizando Visão Computacional"**, aceito no **WCAMA 2026**.
+This repository contains the source code, configurations, models, and validation data used in the paper **"Tracking Melipona capixaba Bees using Computer Vision"**, accepted at **WCAMA 2026**.
 
-## 📌 Sobre o Projeto
-O monitoramento não invasivo da *Melipona capixaba* (espécie endêmica e em perigo de extinção) é uma ferramenta essencial para a conservação ecológica e o avanço da Meliponicultura de Precisão. Este trabalho propõe um pipeline de visão computacional, avaliando o *trade-off* tecnológico entre modelos baseados em Transformers (RT-DETR) e redes convolucionais (YOLO11n, YOLO26n) sob quantização, integrados ao algoritmo **ByteTrack** para rastreamento multi-alvos (MOT).
+## 📌 About the Project
+Non-invasive monitoring of the *Melipona capixaba* (an endemic and endangered species) is an essential tool for ecological conservation and the advancement of Precision Meliponiculture. This work proposes a computer vision pipeline, evaluating the technological trade-off between Transformer-based models (RT-DETR) and convolutional networks (YOLO11n, YOLO26n) under quantization, integrated with the **ByteTrack** algorithm for multi-object tracking (MOT).
 
-## 📂 Estrutura do Repositório
+## 📂 Repository Structure
 
 ```text
-wxama2026-melipona-tracking/
+wcama2026-melipona-tracking/
 ├── bee_dataset_mot/
 │   └── gt/
-│       ├── gt.txt                                 # Arquivo de Ground Truth para o teste MOT
-│       └── labels.txt                             # Rótulos de identificação das classes
+│       ├── gt.txt                                 # Ground Truth file for the MOT test
+│       └── labels.txt                             # Class identification labels
 ├── configs/
-│   ├── hyp.yaml                                   # Hiperparâmetros de treino das redes YOLO (AdamW, lr, etc.)
-│   └── hyp_rtdetr.yaml                            # Hiperparâmetros de treino específicos do RT-DETR
-├── dataset/                                       # Diretório destino do dataset (populado via script)
-├── modelos/                                       # Diretório destino dos pesos pré-treinados (populado via script)
+│   ├── hyp.yaml                                   # YOLO networks training hyperparameters (AdamW, lr, etc.)
+│   └── hyp_rtdetr.yaml                            # RT-DETR specific training hyperparameters
+├── dataset/                                       # Target directory for the dataset (populated via script)
+├── modelos/                                       # Target directory for pre-trained weights (populated via script)
 ├── notebooks/
-│   ├── Artigo_Teste_dos_modelos.ipynb             # Notebook contendo o pipeline de teste dos modelos
-│   ├── Treinamento_RT_DERT.ipynb                  # Notebook contendo o pipeline de treino do RT-DETR
-│   ├── Treinamento_Yolo11n.ipynb                  # Notebook contendo o pipeline de treino do YOLO11n
-│   └── Treinamento_Yolo26.ipynb                   # Notebook contendo o pipeline de treino do YOLO26n
+│   ├── model_testing_pipeline.ipynb               # Notebook containing the models' testing pipeline
+│   ├── training_rt_detr.ipynb                     # Notebook containing the RT-DETR training pipeline
+│   ├── training_yolo11n.ipynb                     # Notebook containing the YOLO11n training pipeline
+│   └── training_yolo26n.ipynb                     # Notebook containing the YOLO26n training pipeline
 ├── test_mot/
-│   ├── primeiro_frame_roi.jpg                     # Imagem de referência para definição da ROI de contagem
-│   ├── teste_10_segundos.mp4                      # Recorte de vídeo de 10s usado na validação do MOTA/IDF1
-│   └── video_completo_2025_12_12_h15_M04_S54.mkv  # Registro completo de campo
-├── README.md                                      # Documentação do repositório
-└── setup_assets.py                                # Script automatizado para download de arquivos pesados
+│   ├── first_frame_roi.jpg                        # Reference image for defining the counting ROI
+│   ├── full_video_2025_12_12_h15_M04_S54.mkv      # Complete field recording
+│   └── test_10_seconds.mp4                        # 10s video clip used for MOTA/IDF1 validation
+├── CITATION.cff                                   # Citation metadata file
+├── README.md                                      # Repository documentation
+├── README.pt-br.md                                # Repository documentation in Portuguese
+└── setup_assets.py                                # Automated script to download large files
 
 ```
 
-## 🚀 Como Configurar o Ambiente
+## 🚀 How to Set Up the Environment
 
-Como os modelos exportados e o conjunto de dados bruto ultrapassam os limites de armazenamento padrão do GitHub, o repositório utiliza o script `setup_assets.py` para buscar os arquivos compactados diretamente do Google Drive de forma automatizada.
+Because the exported models and the raw dataset exceed standard GitHub storage limits, the repository uses the `setup_assets.py` script to automatically fetch the compressed files directly from Google Drive.
 
-### 1. Download Automatizado de Dados e Modelos
+### 1. Automated Data and Model Download
 
-Na raiz do projeto, execute o script de automação:
+At the root of the project, run the automation script:
 
 ```bash
 python setup_assets.py
 
 ```
 
-Este script irá criar as pastas necessárias e realizar o download/extração de:
+This script will create the necessary folders and perform the download/extraction of:
 
-* **Dataset:** O conjunto de dados completo contendo as imagens estruturadas em formato YOLO (`dataset/`).
-* **Modelos:** Os arquivos de pesos compactados (`modelos/`).
+* **Dataset:** The complete dataset containing images structured in YOLO format (`dataset/`).
+* **Models:** The compressed weights files (`modelos/`).
 
-## 📊 Reproduzindo as Métricas do Artigo
+## 📊 Reproducing the Paper's Metrics
 
-1. **Validação Prática e MOTA:** Os dados analíticos do teste de consistência temporal e fluxo direcional (mencionados na Seção 5.2 do artigo) utilizam diretamente os arquivos contidos na pasta `/test_mot` e `/bee_dataset_mot/gt/gt.txt`.
-2. **Hiperparâmetros:** Os arquivos na pasta `/configs` detalham a taxa de aprendizado inicial ($lr0 = 0.001667$), otimizador AdamW, e os ganhos de perda e transformações geométricas na memória utilizados para mitigar o desbalanceamento de classes do cenário real.
-3. **Treinamento:** Os notebooks em `/notebooks` documentam de ponta a ponta o processo de treinamento e as curvas de convergência obtidas na GPU antes do processo de quantização INT8 para a borda.
-4. **Entrada da colmeia:** ROI = {"xmin": 415, "ymin": 415, "xmax": 540, "ymax": 580}
+1. **Practical Validation and MOTA:** The analytical data for the temporal consistency and directional flow test (mentioned in Section 5.2 of the paper) directly use the files contained in the `/test_mot` and `/bee_dataset_mot/gt/gt.txt` folders.
+2. **Hyperparameters:** The files in the `/configs` folder detail the initial learning rate (lr0 = 0.001667), AdamW optimizer, loss gains, and in-memory geometric transformations used to mitigate class imbalance from the real-world scenario.
+3. **Training:** The notebooks in `/notebooks` document the end-to-end training process and the convergence curves obtained on the GPU before the INT8 quantization process for the edge.
+4. **Hive entrance:** ROI = {"xmin": 415, "ymin": 415, "xmax": 540, "ymax": 580}
 
-## ✒️ Autor
+## ✒️ Author
 
-* **Marcos Veniciu de Sá Barbalho** - Pesquisador e Desenvolvedor (Mestrado focado em arquitetura de sistemas e monitoramento ecológico não invasivo).
+* **Marcos Veniciu de Sá Barbalho** - Researcher and Developer (Master's focusing on systems architecture and non-invasive ecological monitoring).
